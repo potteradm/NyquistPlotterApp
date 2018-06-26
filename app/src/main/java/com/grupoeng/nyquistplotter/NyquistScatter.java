@@ -9,6 +9,10 @@ import java.util.ArrayList;
 public class NyquistScatter {
     private ArrayList<Complex> numerador;
     private ArrayList<Complex> denominador;
+    private ArrayList<Number> pontosRE;
+    private ArrayList<Number> pontosIM;
+    private ArrayList<Number> pontosIMConj;
+
     NyquistScatter(ArrayList<Complex> numerador, ArrayList<Complex> denominador){
         while(numerador.get(numerador.size()-1).abs()==0)numerador.remove(numerador.size()-1);
         this.numerador=numerador;
@@ -16,19 +20,54 @@ public class NyquistScatter {
         this.denominador=denominador;
     }
 
-    public ArrayList<DataPoint> getScatter(){
-        ArrayList<DataPoint> dataPoints=new ArrayList<>();
-        for(double i=0;i<1;i+=0.01){//100 samples
+    public ArrayList<Number> getPontosIMConj() {
+        return pontosIMConj;
+    }
+
+    public int calcScatter(){
+        pontosRE=new ArrayList<>();
+        pontosIM=new ArrayList<>();
+        pontosIMConj=new ArrayList<>();
+
+        int counter=0;
+        for(double i=0;i<10;i+=0.01){//100 samples
             Complex aux=function(i);
-            dataPoints.add(new DataPoint(aux.getReal(),aux.getImaginary()));
+            if(i==0&aux.isNaN()){
+                aux=function(i+0.0000001);
+                pontosRE.add(aux.getReal());
+                pontosIM.add(aux.getImaginary());
+                pontosIMConj.add(-aux.getImaginary());
+                aux=function(i-0.0000001);
+                pontosRE.add(aux.getReal());
+                pontosIM.add(aux.getImaginary());
+                pontosIMConj.add(-aux.getImaginary());
+            }
+            pontosRE.add(aux.getReal());
+            pontosIM.add(aux.getImaginary());
+            pontosIMConj.add(-aux.getImaginary());
+            counter++;
         }
-        for(int i=1;i<100000;i++){//99999 samples
+        for(int i=10;i<1000;i++){//990 samples
             Complex aux=function(i);
-            dataPoints.add(new DataPoint(aux.getReal(),aux.getImaginary()));
+            pontosRE.add(aux.getReal());
+            pontosIM.add(aux.getImaginary());
+            pontosIMConj.add(-aux.getImaginary());
+            counter++;
         }
+        for(int i=1000;i<100000;i+=10){//990 samples
+            Complex aux=function(i);
+            pontosRE.add(aux.getReal());
+            pontosIM.add(aux.getImaginary());
+            pontosIMConj.add(-aux.getImaginary());
+            counter++;
+        }
+
         Complex aux=function(Double.POSITIVE_INFINITY);//1 sample
-        dataPoints.add(new DataPoint(aux.getReal(),aux.getImaginary()));
-        return dataPoints;
+        pontosRE.add(aux.getReal());
+        pontosIM.add(aux.getImaginary());
+        pontosIMConj.add(-aux.getImaginary());
+        counter++;
+        return counter;
     }
 
     private Complex function(double w){
@@ -89,5 +128,23 @@ public class NyquistScatter {
     }
     public int getGrauDenominador(){
         return denominador.size()-1;
+    }
+
+
+    public ArrayList<Number> getPontosRE() {
+        return pontosRE;
+    }
+
+    public ArrayList<Number> getPontosIM() {
+        return pontosIM;
+    }
+
+
+    public ArrayList<DataPoint> getDataPoints(){
+        ArrayList<DataPoint> dp=new ArrayList<>(pontosIM.size());
+        for(int i=0;i<pontosIM.size();i++){
+            dp.add(new DataPoint(pontosRE.get(i).doubleValue(),pontosIM.get(i).doubleValue()));
+        }
+        return dp;
     }
 }

@@ -56,7 +56,6 @@ public class ExampleUnitTest {
         Method method = scatter.getClass().getDeclaredMethod("function", double.class);
         method.setAccessible(true);
         Complex result= (Complex) method.invoke(scatter, Double.POSITIVE_INFINITY);
-        System.out.println(result);
         assertTrue(result.abs()==0);
     }
 
@@ -73,8 +72,8 @@ public class ExampleUnitTest {
 
     @Test
     public void testNumberOfSamples(){
-        int samples=scatter.getScatter().size();
-        assertEquals("Valor diferenciado",samples,100100);
+        int samples=scatter.calcScatter();
+        assertEquals("Valor diferenciado",11892,samples);
     }
 
 
@@ -105,7 +104,11 @@ public class ExampleUnitTest {
     }
 
 
-
+    @Test
+    public void testComplexDivision(){
+        Complex a=new Complex(1);
+        assertTrue(a.divide(new Complex(0)).isNaN());
+    }
 
 
 
