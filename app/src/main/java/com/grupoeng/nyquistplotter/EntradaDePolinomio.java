@@ -1,13 +1,20 @@
 package com.grupoeng.nyquistplotter;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import com.androidplot.xy.BoundaryMode;
 
 import org.apache.commons.math3.complex.Complex;
 
@@ -86,10 +93,60 @@ public class EntradaDePolinomio extends AppCompatActivity {
     }
 
     public void openActivity(View view) {
-        Intent myIntent = new Intent(this, TelaGrafico.class);
-        myIntent.putExtra("numerador", ((PolinomioAdapter)numerador.getAdapter()).polinomio); //Optional parameters
-        myIntent.putExtra("denominador", ((PolinomioAdapter)denominador.getAdapter()).polinomio);
-        startActivity(myIntent);
+
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.zoom_dialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText maxim = (EditText) promptsView
+                .findViewById(R.id.etmaxim);
+        final EditText minim = (EditText) promptsView
+                .findViewById(R.id.etminim);
+        final EditText maxre = (EditText) promptsView
+                .findViewById(R.id.etmaxre);
+        final EditText minre = (EditText) promptsView
+                .findViewById(R.id.etminre);
+
+
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // get user input and set it to result
+                                // edit text
+                                if(!maxim.getText().toString().isEmpty()&&!maxre.getText().toString().isEmpty()&&
+                                        !minim.getText().toString().isEmpty()&&!minre.getText().toString().isEmpty()){
+                                    double mini=Double.valueOf(minim.getText().toString());
+                                    double minr=Double.valueOf(minre.getText().toString());
+                                    double maxi=Double.valueOf(maxim.getText().toString());
+                                    double maxr=Double.valueOf(maxre.getText().toString());
+                                    Intent myIntent = new Intent(EntradaDePolinomio.this, TelaGrafico.class);
+                                    myIntent.putExtra("numerador", ((PolinomioAdapter)numerador.getAdapter()).polinomio); //Optional parameters
+                                    myIntent.putExtra("denominador", ((PolinomioAdapter)denominador.getAdapter()).polinomio);
+                                    myIntent.putExtra("mini",mini);
+                                    myIntent.putExtra("minr",minr);
+                                    myIntent.putExtra("maxi",maxi);
+                                    myIntent.putExtra("maxr",maxr);
+                                    startActivity(myIntent);
+
+                                }
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
 
 
     }

@@ -1,5 +1,6 @@
 package com.grupoeng.nyquistplotter;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,12 +13,19 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.CatmullRomInterpolator;
 import com.androidplot.xy.FastLineAndPointRenderer;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -45,7 +53,10 @@ import java.util.Vector;
 public class TelaGrafico extends AppCompatActivity {
 
         GraphView graph;
-
+        XYPlot plot;
+    XYSeries series1;
+    XYSeries series2;
+    LineAndPointFormatter series1Format;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -58,20 +69,27 @@ public class TelaGrafico extends AppCompatActivity {
             denominador= (ArrayList<Complex>)intent.getSerializableExtra("denominador");
             NyquistScatter scatter = new NyquistScatter(numerador, denominador);
             scatter.calcScatter();
-
-
+            Intent it=getIntent();
+            double mini=it.getDoubleExtra("mini",-2);
+            double maxi=it.getDoubleExtra("maxi",2);
+            double minr=it.getDoubleExtra("minr",-2);
+            double maxr=it.getDoubleExtra("maxr",2);
             // initialize our XYPlot reference:
-            XYPlot plot = (XYPlot) findViewById(R.id.plot);
+            plot = (XYPlot) findViewById(R.id.plot);
+
+            plot.setDomainLowerBoundary(minr, BoundaryMode.FIXED);
+            plot.setDomainUpperBoundary(maxr, BoundaryMode.FIXED);
+            plot.setRangeLowerBoundary(mini, BoundaryMode.FIXED);
+            plot.setRangeUpperBoundary(maxi, BoundaryMode.FIXED);
+
+            series1 = new SimpleXYSeries(
+                   scatter.getPontosRE(), scatter.getPontosIM(), "0<w<infinito");
+
+            series2 = new SimpleXYSeries(
+                    scatter.getPontosRE(), scatter.getPontosIMConj(), "0>w>-infinito");
 
 
-            XYSeries series1 = new SimpleXYSeries(
-                   scatter.getPontosRE(), scatter.getPontosIM(), "Series1");
-
-            XYSeries series2 = new SimpleXYSeries(
-                    scatter.getPontosRE(), scatter.getPontosIMConj(), "Series2");
-
-
-            LineAndPointFormatter series1Format = new LineAndPointFormatter(Color.YELLOW, Color.GREEN, Color.TRANSPARENT, null);
+            series1Format = new LineAndPointFormatter(Color.YELLOW, Color.GREEN, Color.TRANSPARENT, null);
 
             series1Format.setInterpolationParams(
                     new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));

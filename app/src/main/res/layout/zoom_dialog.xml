@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/layout_root"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical"
+android:padding="10dp" >
+
+<TextView
+    android:id="@+id/textView1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:text="Defina os limites: "
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<EditText
+    android:id="@+id/etminre"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:hint="Minimo Re"
+    android:inputType="numberSigned|numberDecimal"
+    app:layout_constraintEnd_toStartOf="@+id/etmaxre"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/textView1">
+
+    <requestFocus />
+
+</EditText>
+
+<EditText
+    android:id="@+id/etmaxre"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginStart="6dp"
+    android:layout_marginTop="8dp"
+    android:hint="Maximo Re"
+    android:inputType="numberSigned|numberDecimal"
+    app:layout_constraintBottom_toTopOf="@+id/etmaxim"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
+    app:layout_constraintStart_toEndOf="@+id/etminre"
+    app:layout_constraintTop_toBottomOf="@+id/textView1"
+    app:layout_constraintVertical_bias="0.52" />
+
+<EditText
+    android:id="@+id/etminim"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="20dp"
+    android:hint="Minimo IM"
+    android:inputType="numberSigned|numberDecimal"
+    app:layout_constraintEnd_toStartOf="@+id/etmaxim"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/etminre" />
+
+<EditText
+    android:id="@+id/etmaxim"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="20dp"
+    android:hint="Maximo IM"
+    android:inputType="numberSigned|numberDecimal"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toEndOf="@+id/etminim"
+    app:layout_constraintTop_toBottomOf="@+id/etmaxre" />
+</android.support.constraint.ConstraintLayout>
